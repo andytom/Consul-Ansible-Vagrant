@@ -1,0 +1,20 @@
+---
+# Common Variables for all machines
+
+# Version of Consul to install
+consul_version: 0.5.0
+
+# Locations where the consul and consul web ui packages are downloaded from.
+consul_remote_url: https://bintray.com/artifact/download/mitchellh/consul/{{ consul_version }}_linux_amd64.zip
+consul_ui_remote_url: https://bintray.com/artifact/download/mitchellh/consul/{{ consul_version }}_web_ui.zip
+
+# Key used to encrypt the consul traffic
+# Generated via 'consul keygen'
+# Note - This should be stored securly.
+consul_encrypt: 9tFhmBgJz5BoVw1EWQGQFQ==
+
+# By default we don't want every machine to be a server
+is_server: false
+
+# By default we don't want to install the web ui on every machine
+has_webui: false

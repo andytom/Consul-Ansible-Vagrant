@@ -1,0 +1,12 @@
+---
+# Download and unpack the WebUI
+
+- name: Fetch the install zip
+  get_url: url={{ consul_ui_remote_url }}
+           dest=/tmp/consul_ui_{{ consul_version }}.zip
+
+- name: Install Web UI consul
+  unarchive: src=/tmp/consul_ui_{{ consul_version }}.zip
+             dest=/home/consul
+             copy=no
+             creates=/home/consul/dist

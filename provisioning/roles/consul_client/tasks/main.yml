@@ -1,0 +1,19 @@
+---
+# Installs an example service and configures Consul to monitor it
+
+- name: Install Nginx
+  apt: name=nginx
+       update_cache=yes
+       cache_valid_time=3600
+
+- name: Start Nginx
+  service: name=nginx
+           state=started
+           enabled=yes
+
+- name: Add Consul Nginx service monitor
+  copy: dest=/etc/consul/services.json
+        src=services.json
+        owner=consul
+        group=consul
+  notify: reload consul

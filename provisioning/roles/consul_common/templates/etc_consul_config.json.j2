@@ -1,0 +1,26 @@
+{
+{% if is_server %}
+    "server": true,
+    "bootstrap_expect": {{ groups['consul_server'] | length }},
+{% else %}
+    "server": false,
+{% endif %}
+{% if has_webui %}
+    "ui_dir": "/home/consul/dist",
+{% endif %}
+    "bind_addr": "{{ ansible_eth1.ipv4.address }}",
+    "client_addr": "0.0.0.0",
+    "data_dir": "/var/consul",
+    "datacenter": "vagrant",
+    "enable_syslog": true,
+    "encrypt": "{{ consul_encrypt }}",
+    "log_level": "INFO",
+    "start_join": [
+{% for host in groups['consul_server'] %}
+        "{{ hostvars[host]['ansible_eth1']['ipv4']['address'] }}"
+{%- if not loop.last -%}
+        {{ ',' }}
+{% endif %}
+{% endfor %}
+    ]
+}

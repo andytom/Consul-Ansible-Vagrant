@@ -1,0 +1,3 @@
+---
+# Servers are consul servers
+is_server: true

@@ -1,0 +1,80 @@
+# Consul Ansible Vagrant
+
+## Overview
+
+This project will setup [Consul](https://www.consul.io/) and demonstrate it's
+service discovery.
+
+The Vagrant file will boot a 3 node consul cluster (node1, node2 and node3)
+and a client (client1).
+The client has the consul web ui installed and an example service (Nginx).
+
+## Setup
+
+The following steps require that you have [Ansible](http://www.ansible.com/),
+[Vagrant](http://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/) installed.
+
+You can find instructions to install these programs below:
+* [Ansible docs](http://docs.ansible.com/intro_installation.html)
+* [Vagrant docs](http://docs.vagrantup.com/v2/installation/index.html)
+* [Virtualbox docs](https://www.virtualbox.org/wiki/Documentation)
+
+Once you have the above setup you can start the machines using vagrant:
+~~~
+vagrant up
+~~~
+
+This will create the 4 machines and the configure the software on them using
+Ansible.
+
+**WebUI**
+
+The Consul webui is available at [192.168.20.13:8500/ui/](http://192.168.20.13:8500/ui/)
+
+**DNS**
+
+You can see what servers have nginx running using dig.
+~~~
+dig @192.168.20.11 -p 8600 nginx.service.vagrant.consul. ANY
+~~~
+
+You can check also check on the consul service.
+~~~
+dig @192.168.20.10 -p 8600 consul.service.vagrant.consul. ANY
+~~~
+
+## Compatability
+
+This has only been tested with Vagrant v1.7.2 and Virtualbox v4.3.20 running on
+a Linux host. Ansible was installed using pip into a virtaulenv (see
+requirements.txt for exact version).
+
+## Known Issues and Limitations
+
+* Due to hardware limitations I have not been able to test with multiple client
+  machines. However if you add additional client machines to the Vagrantfile
+  and put them in the 'consul_client' group, boot them using
+  ~~~
+  vagrant up client2
+  ~~~
+  Then provision with 
+  ~~~
+  vagrant provision node1
+  ~~~
+  it should "just work" (tm). If you look in the WebUI or query via dig you
+  should now see both the client machines.
+  
+  *Note - All of the provisioning is done via node1 so that we can use the
+  Ansible facts from the other groups and Ansible parallel execution.*
+* There is important data in Ansible group_vars that should be encrypted this is
+  a limitation of this demo.
+* The consul ui accepting all connections this is a potential security risk but
+  also a limitation of the demo.
+* Hardcoded details (network adapter to bind to, etc) required to make sure the
+  demo works.
+* Probably should have just used a module of the Ansible Galaxy. I used this as
+  an excuse to also learn Ansible so I am not sure how to judge the quality of
+  modules on the Ansible Galaxy.
+
+## External Documentation
+* [Consul Docs](https://www.consul.io/docs/index.html)

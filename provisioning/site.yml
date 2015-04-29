@@ -1,0 +1,23 @@
+---
+# Main Play book
+# Creates a Consul cluster and connect consul clients to it.
+
+# First create the Consul cluster so the clients have something to connect to
+- name: create the consul cluster
+  hosts: consul_server
+  become: yes
+  become_method: sudo
+
+  roles:
+  - consul_common
+
+# Set up the clients and connect them to the cluster
+- name: install consul web ui and configure client
+  hosts: consul_client
+  become: yes
+  become_method: sudo
+
+  roles:
+  - consul_common
+  - consul_webui
+  - consul_client

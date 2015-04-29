@@ -1,0 +1,46 @@
+---
+# Install and configure Consul the only difference between a 
+# server and a client is in the config.json file.
+
+- name: Install unzip
+  apt: name=unzip
+       update_cache=yes
+       cache_valid_time=3600
+
+- name: Create Consul user
+  user: name=consul
+        comment="Consul User"
+
+- name: Create Consul dirs
+  file: path={{ item }}
+        owner=consul
+        group=consul
+        state=directory
+  with_items:
+    - /var/consul
+    - /etc/consul
+    - /var/log/consul
+
+- name: Fetch the install zip
+  get_url: url={{ consul_remote_url }}
+           dest=/tmp/consul_{{ consul_version }}.zip
+
+- name: Install Consul
+  unarchive: src=/tmp/consul_{{ consul_version }}.zip
+             dest=/usr/local/bin
+             copy=no
+             creates=/usr/local/bin/consul
+
+- name: Configure Consul
+  template: src=etc_consul_config.json.j2
+            dest=/etc/consul/config.json
+  notify: restart consul
+
+- name: Add upstart config
+  template: src=upstart_consul.conf.j2
+            dest=/etc/init/consul.conf
+
+- name: Start the Consul service
+  service: name=consul
+           state=started
+           enabled=yes

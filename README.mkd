@@ -33,12 +33,14 @@ The Consul webui is available at [192.168.20.13:8500/ui/](http://192.168.20.13:8
 
 **DNS**
 
-You can see what servers have nginx running using dig.
+You can also query Consul to see what services are running using DNS.
+
+You can see what servers have nginx running using the following command:
 ~~~
 dig @192.168.20.11 -p 8600 nginx.service.vagrant.consul. ANY
 ~~~
 
-You can check also check on the consul service.
+You can check also check on the consul service using:
 ~~~
 dig @192.168.20.10 -p 8600 consul.service.vagrant.consul. ANY
 ~~~
@@ -65,7 +67,8 @@ requirements.txt for exact version).
   should now see both the client machines.
   
   *Note - All of the provisioning is done via node1 so that we can use the
-  Ansible facts from the other groups and Ansible parallel execution.*
+  Ansible facts from the other groups and Ansible parallel execution. See the
+  [Ansible section of the Vagrant Docs](https://docs.vagrantup.com/v2/provisioning/ansible.html).*
 * There is important data in Ansible group_vars that should be encrypted this is
   a limitation of this demo.
 * The consul ui accepting all connections this is a potential security risk but
